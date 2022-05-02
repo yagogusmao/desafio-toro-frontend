@@ -1,9 +1,9 @@
 import { Api } from "../api";
 
 const UserApi = {
-  getUser: (account: String) =>
+  getUser: (account: string) =>
     Api.get(`/user/${account}`).then((response) => response.data),
-  getUserByCpf: (cpf: String) =>
+  getUserByCpf: (cpf: string) =>
     Api.get(`/user/cpf/${cpf}`).then((response) => response.data),
 };
 

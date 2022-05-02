@@ -12,11 +12,11 @@ const Home: NextPage = () => {
   const router = useRouter();
   const { showSnackbar } = useSnackbar();
   const { login } = useUserData();
-  const [cpf, setCpf] = useState<String>("");
+  const [cpf, setCpf] = useState<string>("");
 
-  const onChangeCpf = (cpf: String) => setCpf(cpf.substring(0, 11));
+  const onChangeCpf = (cpf: string) => setCpf(cpf.substring(0, 11));
 
-  const submit = (cpf: String) => {
+  const submit = (cpf: string) => {
     if (cpf.length === 11) {
       UserApi.getUserByCpf(cpf)
         .then((user) => {
@@ -36,8 +36,8 @@ const Home: NextPage = () => {
       showSnackbar(
         "warning",
         "Campos inválidos",
-        "A conta tem mais de 6 dígitos",
-        "Digite uma conta com 6 dígitos"
+        "O CPF informada não tem 11 dígitos",
+        "Digite um CPF com 11 dígitos"
       );
   };
 

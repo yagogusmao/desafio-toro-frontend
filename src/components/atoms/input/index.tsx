@@ -7,9 +7,9 @@ const _Input = ({
   whenUpdate,
   disabled,
 }: {
-  children: String;
-  value: String;
-  whenUpdate?: (value: String) => void;
+  children: string;
+  value: string;
+  whenUpdate?: (value: string) => void;
   disabled?: boolean;
 }) => {
   const onChange = (event: any, calledFunction: any) => {

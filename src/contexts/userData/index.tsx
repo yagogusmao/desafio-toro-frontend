@@ -1,11 +1,11 @@
 import React, { useState, createContext, useContext, ReactNode } from "react";
 
 interface userDataContextType {
-  account: String;
+  account: string;
   balance: Number;
-  name: String;
-  cpf: String;
-  login: (account: String, balance: Number, name: String, cpf: String) => void;
+  name: string;
+  cpf: string;
+  login: (account: string, balance: Number, name: string, cpf: string) => void;
   logout: () => void;
 }
 
@@ -24,10 +24,10 @@ const UserDataContext = createContext<userDataContextType>(
 
 const _UserData = ({ children }: { children: ReactNode }) => {
   const [{ account, balance, name, cpf }, setUserData] = useState<{
-    account: String;
+    account: string;
     balance: Number;
-    name: String;
-    cpf: String;
+    name: string;
+    cpf: string;
   }>({
     account: "",
     balance: 0,
@@ -35,7 +35,7 @@ const _UserData = ({ children }: { children: ReactNode }) => {
     cpf: "",
   });
 
-  const login = (account: String, balance: Number, name: String, cpf: String) =>
+  const login = (account: string, balance: Number, name: string, cpf: string) =>
     setUserData({ account, balance, name, cpf });
 
   const logout = () =>

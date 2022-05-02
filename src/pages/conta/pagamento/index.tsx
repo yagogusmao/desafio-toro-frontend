@@ -8,57 +8,43 @@ import { _Modal } from "../../../components/molecules/modal";
 import { useSnackbar } from "../../../contexts/snackbar";
 import { useUserData } from "../../../contexts/userData";
 import { TransferApi } from "../../../services/transfer.service";
+import { UserApi } from "../../../services/user.service";
 
 const Pagamento: NextPage = () => {
   const router = useRouter();
   const { showSnackbar } = useSnackbar();
   const { account, cpf } = useUserData();
 
-  const [targetAccount, setTargetAccount] = useState<String>("");
-  const onChangeTargetAccount = (targetAccount: String) =>
+  const [targetAccount, setTargetAccount] = useState<string>("");
+  const onChangeTargetAccount = (targetAccount: string) =>
     setTargetAccount(targetAccount.substring(0, 6));
 
-  const [amount, setAmount] = useState<String>("");
-  const onChangeAmount = (amount: String) => setAmount(amount.substring(0, 6));
+  const [amount, setAmount] = useState<string>("");
+  const onChangeAmount = (amount: string) => setAmount(amount.substring(0, 6));
 
   const [openModal, setOpenModal] = useState(false);
   const closeModal = () => setOpenModal(false);
 
   const submitForm = () => {
     if (validations()) {
-      const body = {
-        event: "TRANSFER",
-        target: {
-          bank: "352",
-          branch: "0001",
-          account: targetAccount,
-        },
-        origin: {
-          bank: "033",
-          branch: "3312",
-          cpf: cpf,
-        },
-        amount: Number(amount),
-      };
-      TransferApi.createTransfer(body)
-        .then((transfer) => {
-          showSnackbar(
-            "success",
-            "Transferência concluída",
-            "Dinheiro enviado",
-            "Parabéns por concluir a transferência"
-          );
-          router.push("/conta?newBalance=true");
-        })
-        .catch((error) => {
-          console.log(error);
+      UserApi.getUser(targetAccount).then((user) => {
+        if (user) {
+          if (account === user.account && cpf === user.cpf) setOpenModal(true);
+          else
+            showSnackbar(
+              "error",
+              "Dados divergentes",
+              "A conta para transferência é de sua titularidade",
+              "Digite uma conta válida"
+            );
+        } else
           showSnackbar(
             "error",
-            "Transferência não concluída",
-            "Dinheiro não enviado",
-            error.message
+            "Conta inválida",
+            "A conta para transferência não existe",
+            "Digite uma conta válida"
           );
-        });
+      });
     }
   };
 
@@ -85,7 +71,40 @@ const Pagamento: NextPage = () => {
     return flag;
   };
 
-  const submitModal = () => router.push("/conta/pagamento/confirmado");
+  const submitModal = () => {
+    const body = {
+      event: "TRANSFER",
+      target: {
+        bank: "352",
+        branch: "0001",
+        account: targetAccount,
+      },
+      origin: {
+        bank: "033",
+        branch: "3312",
+        cpf: cpf,
+      },
+      amount: Number(amount),
+    };
+    TransferApi.createTransfer(body)
+      .then((transfer) => {
+        showSnackbar(
+          "success",
+          "Transferência concluída",
+          "Dinheiro enviado",
+          "Parabéns por concluir a transferência"
+        );
+        router.push("/conta?newBalance=true");
+      })
+      .catch((error) => {
+        showSnackbar(
+          "error",
+          "Transferência não concluída",
+          "Dinheiro não enviado",
+          error.message
+        );
+      });
+  };
 
   return (
     <>
@@ -108,6 +127,7 @@ const Pagamento: NextPage = () => {
         openModal={openModal}
         closeModal={closeModal}
         submitModal={submitModal}
+        amount={amount}
       ></_Modal>
     </>
   );

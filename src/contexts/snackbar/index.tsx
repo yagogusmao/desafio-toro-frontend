@@ -18,9 +18,9 @@ const SnackbarContext = createContext<snackbarContextType>(
 const _Snackbar = ({ children }: { children: ReactNode }) => {
   const [{ severity, title, message, guidance }, setSnackbar] = useState<{
     severity: AlertColor;
-    title: String;
-    message: String;
-    guidance: String;
+    title: string;
+    message: string;
+    guidance: string;
   }>({
     severity: "success",
     title: "",
